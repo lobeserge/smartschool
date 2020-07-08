@@ -8,10 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import ub.fet.smartschool.model.Admin;
-import ub.fet.smartschool.model.ERole;
-import ub.fet.smartschool.model.Role;
-import ub.fet.smartschool.model.Student;
+import ub.fet.smartschool.model.*;
 import ub.fet.smartschool.payload.request.LoginRequest;
 import ub.fet.smartschool.payload.request.SignupAdminRequest;
 import ub.fet.smartschool.payload.request.SignupStudentRequest;
@@ -90,7 +87,6 @@ public class AuthStudentController {
 
 		// Create new user's account
 		Student user = new Student();
-		user.setId(signUpRequest.getId());
 		user.setAddress(signUpRequest.getAddress());
 		user.setEmail(signUpRequest.getEmail());
 		user.setNationalid(signUpRequest.getNationalid());
@@ -99,7 +95,10 @@ public class AuthStudentController {
 		user.setSex(signUpRequest.getSex());
 		user.setDob(signUpRequest.getDob());
 		user.setRegdate(LocalDateTime.now());
-		user.setMatricule("FE17A035");
+		Faculty fac=facultyRepository.findByFacultyName(signUpRequest.getFaculty()).get();
+		int count=userRepository.findAll().size();
+		String matricule=fac.getFacultyCode()+"20"+(count+1);
+		user.setMatricule(matricule);
 		user.setLevel(200);
 		user.setPassword(encoder.encode(signUpRequest.getPassword()));
 

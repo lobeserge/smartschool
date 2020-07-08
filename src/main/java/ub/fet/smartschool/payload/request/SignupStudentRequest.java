@@ -2,22 +2,14 @@ package ub.fet.smartschool.payload.request;
 
 
 import lombok.Data;
-import ub.fet.smartschool.model.Role;
-
-import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 public class SignupStudentRequest {
-
-
-    private Long id;
 
     @Size(max = 20)
     private String username;
@@ -49,10 +41,6 @@ public class SignupStudentRequest {
     private LocalDateTime regdate;
 
     private LocalDate dob;
-
-    @NotBlank
-    @Size(max = 20)
-    private String matricule;
 
     @NotBlank
     @Size(max = 50)
