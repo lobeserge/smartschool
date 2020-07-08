@@ -90,6 +90,7 @@ public class AuthStudentController {
 
 		// Create new user's account
 		Student user = new Student();
+		user.setId(signUpRequest.getId());
 		user.setAddress(signUpRequest.getAddress());
 		user.setEmail(signUpRequest.getEmail());
 		user.setNationalid(signUpRequest.getNationalid());

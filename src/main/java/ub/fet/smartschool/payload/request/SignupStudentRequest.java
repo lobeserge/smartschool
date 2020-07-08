@@ -4,10 +4,7 @@ package ub.fet.smartschool.payload.request;
 import lombok.Data;
 import ub.fet.smartschool.model.Role;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -18,6 +15,9 @@ import java.util.Set;
 
 @Data
 public class SignupStudentRequest {
+
+
+    private Long id;
 
     @Size(max = 20)
     private String username;
