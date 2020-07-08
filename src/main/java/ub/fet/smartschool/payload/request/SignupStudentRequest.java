@@ -18,28 +18,28 @@ import java.util.Set;
 
 @Data
 public class SignupStudentRequest {
-    @NotBlank
+
     @Size(max = 20)
     private String username;
 
-    @NotBlank
+
     @Size(max = 20)
     private String realname;
 
-    @NotBlank
+
     @Size(max = 20)
     private String nationalid;
 
-    @NotBlank
+
     @Size(max = 50)
     @Email
     private String email;
 
-    @NotBlank
+
     @Size(max = 120)
     private String password;
 
-    @NotBlank
+
     @Size(max = 20)
     private String address;
 
@@ -49,6 +49,10 @@ public class SignupStudentRequest {
     private LocalDateTime regdate;
 
     private LocalDate dob;
+
+    @NotBlank
+    @Size(max = 20)
+    private String matricule;
 
     @NotBlank
     @Size(max = 50)

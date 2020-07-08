@@ -98,6 +98,7 @@ public class AuthStudentController {
 		user.setSex(signUpRequest.getSex());
 		user.setDob(signUpRequest.getDob());
 		user.setRegdate(LocalDateTime.now());
+		user.setMatricule("FE17A035");
 		user.setLevel(200);
 		user.setPassword(encoder.encode(signUpRequest.getPassword()));
 
