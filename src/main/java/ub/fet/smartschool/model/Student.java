@@ -74,4 +74,18 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "student_courses",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id"))
+    Set<Course> registeredCourse;
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "student")
+    Set<RegStudentCourse> registrations;
+
 }

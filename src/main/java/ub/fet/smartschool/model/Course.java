@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 @Data
@@ -36,6 +37,13 @@ public class Course {
     @ManyToOne
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "course")
+    Set<RegStudentCourse> registrations;
+
+
 
 
 }
