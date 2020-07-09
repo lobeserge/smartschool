@@ -88,4 +88,7 @@ public class Student {
     @OneToMany(mappedBy = "student")
     Set<RegStudentCourse> registrations;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "student")
+    private Fee fee;
 }
