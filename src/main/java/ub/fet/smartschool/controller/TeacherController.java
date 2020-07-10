@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ub.fet.smartschool.dao.AssignTeacherCourseDAO;
-import ub.fet.smartschool.dao.RegStudentCourseDAO;
-import ub.fet.smartschool.dao.TeacherCourseRetreive;
+import ub.fet.smartschool.dao.*;
 import ub.fet.smartschool.model.AssignTeacherCourse;
 import ub.fet.smartschool.model.RegStudentCourse;
+import ub.fet.smartschool.model.Staff;
+import ub.fet.smartschool.model.Student;
 import ub.fet.smartschool.repository.AssignTeacherCourseRepository;
 import ub.fet.smartschool.repository.CourseRepository;
 import ub.fet.smartschool.repository.StaffRepository;
@@ -68,9 +68,41 @@ public class TeacherController {
     }
 
 
+    @GetMapping("/teacher-name/{name}")
+    public ResponseEntity<?> getParticularTeacherByName(@PathVariable("name") String name){
+        List<Staff> teacher=staffRepository.findAll().stream().filter(
+                e->e.getRealnames().toLowerCase().contains(name.toLowerCase())
+        ).collect(Collectors.toList());
+        return ResponseEntity.ok(teacher);
+    }
 
 
+    @DeleteMapping("/delete/{name}")
+    @PreAuthorize("hasRole('ADMIN')")
+    ResponseEntity<?> deleteTeacher(@PathVariable("name") String  name) {
+        long stdmatr=staffRepository.findByRealnames(name).get().getId();
+        staffRepository.deleteById(stdmatr);
+        return ResponseEntity.ok("staff deleted");
+    }
 
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    Staff updateStaff(@RequestBody UpdateStaffDAO updateStaffDAO, @PathVariable("id") long id) {
+
+        return staffRepository.findById(id)
+                .map(l-> {
+                    l.setAddress(updateStaffDAO.getAddress());
+                    l.setDob(updateStaffDAO.getDob());
+                    l.setEmail(updateStaffDAO.getEmail());
+                    l.setNationalid(updateStaffDAO.getNationalid());
+                    l.setSex(updateStaffDAO.getSex());
+                   l.setRealnames(updateStaffDAO.getRealname());
+                    return staffRepository.save(l);
+                })
+                .orElseGet(() -> {
+                    return null;
+                });
+    }
 
 
 }

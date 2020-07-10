@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ub.fet.smartschool.dao.CourseDAO;
-import ub.fet.smartschool.dao.DepartmentDAO;
-import ub.fet.smartschool.dao.StudentCourseRetreive;
+import ub.fet.smartschool.dao.*;
+import ub.fet.smartschool.model.Course;
+import ub.fet.smartschool.model.Faculty;
 import ub.fet.smartschool.model.RegStudentCourse;
 import ub.fet.smartschool.repository.CourseRepository;
 import ub.fet.smartschool.repository.RegStudentCourseRepository;
@@ -57,6 +57,48 @@ public class CourseController {
         return ResponseEntity.ok(studentCourseRetreives);
 
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getCourses(){
+        return ResponseEntity.ok(courseRepository.findAll());
+    }
+
+    @GetMapping("/name/{coursename}")
+    public ResponseEntity<?> getCourseByName(@PathVariable("coursename") String coursename){
+        List<Course> courses=courseRepository.findAll().stream().filter(
+                e->e.getCourseName().toLowerCase().contains(coursename.toLowerCase())
+        ).collect(Collectors.toList());
+        return ResponseEntity.ok(courses);
+    }
+    @GetMapping("/code/{coursecode}")
+    public ResponseEntity<?> getParticularCourse(@PathVariable("coursecode") String coursecode){
+        Course course=courseRepository.findByCourseCode(coursecode).get();
+        return ResponseEntity.ok(course);
+    }
+
+    @DeleteMapping("/delete/{coursecode}")
+    @PreAuthorize("hasRole('ADMIN')")
+    ResponseEntity<?> deleteCourse(@PathVariable("coursecode") String  coursecode) {
+        long courseid=courseRepository.findByCourseCode(coursecode).get().getId();
+        courseRepository.deleteById(courseid);
+        return ResponseEntity.ok("course deleted");
+    }
+
+    @PutMapping("/update/{courseid}")
+    @PreAuthorize("hasRole('ADMIN')")
+    Course updateCourse(@RequestBody UpdateCourseDAO updateCourseDAO, @PathVariable("courseid") String courseid) {
+
+        return courseRepository.findByCourseCode(courseid)
+                .map(l-> {
+                  l.setCourseName(updateCourseDAO.getCourseName());
+                    return courseRepository.save(l);
+                })
+                .orElseGet(() -> {
+                    return null;
+                });
+    }
+
+
 
 
 
