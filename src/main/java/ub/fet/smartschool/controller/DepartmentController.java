@@ -50,9 +50,8 @@ public class DepartmentController {
 		return ResponseEntity.ok(departmentList);
 	}
 
-
-
 	@DeleteMapping("/delete/{departid}")
+	@PreAuthorize("hasRole('ADMIN')")
 	ResponseEntity<?> deleteDepartment(@PathVariable("departid") String  departid) {
 		int deptid=departmentRepository.findByDepartmentCode(departid).get().getId();
 		departmentRepository.deleteById(deptid);
@@ -60,6 +59,7 @@ public class DepartmentController {
 	}
 
 	@PutMapping("/update/{departid}")
+	@PreAuthorize("hasRole('ADMIN')")
 	Department updateDepartment(@RequestBody UpdateDepartmentDAO departmentName, @PathVariable("departid") String departid) {
 
 		return departmentRepository.findByDepartmentCode(departid)

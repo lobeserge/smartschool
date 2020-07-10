@@ -4,13 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ub.fet.smartschool.dao.FeeDAO;
-import ub.fet.smartschool.dao.RegStudentCourseDAO;
-import ub.fet.smartschool.dao.StudentProfile;
-import ub.fet.smartschool.model.ESemester;
-import ub.fet.smartschool.model.Fee;
-import ub.fet.smartschool.model.RegStudentCourse;
-import ub.fet.smartschool.model.Student;
+import ub.fet.smartschool.dao.*;
+import ub.fet.smartschool.model.*;
 import ub.fet.smartschool.repository.CourseRepository;
 import ub.fet.smartschool.repository.FeeRepository;
 import ub.fet.smartschool.repository.RegStudentCourseRepository;
@@ -19,6 +14,7 @@ import ub.fet.smartschool.repository.StudentRepository;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -116,6 +112,71 @@ public class StudentController {
             }
                 return ResponseEntity.ok(feeRepository.save(fee));
     }
+
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getStudents(){
+        return ResponseEntity.ok(studentRepository.findAll());
+    }
+
+    @GetMapping("/matricule/{matricule}")
+    public ResponseEntity<?> getParticularStudent(@PathVariable("matricule") String matricule){
+        Student student=studentRepository.findByMatricule(matricule).get();
+        return ResponseEntity.ok(student);
+    }
+
+    @GetMapping("/student-name/{name}")
+    public ResponseEntity<?> getParticularStudentByName(@PathVariable("name") String name){
+        List<Student> student=studentRepository.findAll().stream().filter(
+                e->e.getRealname().toLowerCase().contains(name.toLowerCase())
+        ).collect(Collectors.toList());
+        return ResponseEntity.ok(student);
+    }
+
+
+    @DeleteMapping("/delete/{matricule}")
+    @PreAuthorize("hasRole('ADMIN')")
+    ResponseEntity<?> deleteStudent(@PathVariable("matricule") String  matricule) {
+        long stdmatr=studentRepository.findByMatricule(matricule).get().getId();
+        studentRepository.deleteById(stdmatr);
+        return ResponseEntity.ok("student deleted");
+    }
+
+    @PutMapping("/update/{matricule}")
+    @PreAuthorize("hasRole('ADMIN')")
+    Student updateStudent(@RequestBody UpdateStudentDAO updateStudentDAO, @PathVariable("matricule") String matricule) {
+
+        return studentRepository.findByMatricule(matricule)
+                .map(l-> {
+                    l.setAddress(updateStudentDAO.getAddress());
+                    l.setDob(updateStudentDAO.getDob());
+                    l.setEmail(updateStudentDAO.getEmail());
+                    l.setNationalid(updateStudentDAO.getNationalid());
+                    l.setSex(updateStudentDAO.getSex());
+                    l.setRealname(updateStudentDAO.getRealname());
+                    return studentRepository.save(l);
+                })
+                .orElseGet(() -> {
+                    return null;
+                });
+    }
+
+    @PutMapping("/level/{matricule}")
+    @PreAuthorize("hasRole('ADMIN')")
+    Student updateStudentLevel(@RequestBody UpdateStudentLevel updateStudentLevel, @PathVariable("matricule") String matricule) {
+
+        return studentRepository.findByMatricule(matricule)
+                .map(l-> {
+                    l.setLevel(updateStudentLevel.getLevel());
+                    return studentRepository.save(l);
+                })
+                .orElseGet(() -> {
+                    return null;
+                });
+    }
+
+
+
 
 
 }
