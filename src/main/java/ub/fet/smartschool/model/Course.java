@@ -44,6 +44,8 @@ public class Course {
     Set<RegStudentCourse> registrations;
 
 
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "course")
+    private Set<Result> results;
 
 }

@@ -91,4 +91,9 @@ public class Student {
     @JsonIgnore
     @OneToOne(mappedBy = "student")
     private Fee fee;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "student")
+    private Set<Result> results;
+
 }
