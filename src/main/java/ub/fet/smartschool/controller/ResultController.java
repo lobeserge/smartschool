@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ub.fet.smartschool.dao.CourseResultsDAO;
 import ub.fet.smartschool.dao.FacultyDAO;
 import ub.fet.smartschool.dao.ResultDAO;
 import ub.fet.smartschool.dao.StudentResultDAO;
@@ -102,7 +103,26 @@ public class ResultController {
         return ResponseEntity.ok(studentResultDAOS);
     }
 
+    @GetMapping("/course/{coursecode}")
+    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+    public ResponseEntity<?> getCourseResult(@PathVariable("coursecode") String coursecode){
 
+        List<CourseResultsDAO> courseResultsDAOS=new ArrayList<>();
+        List<Result> results=resultRepository.findAll().stream().filter(
+                e->e.getCourse().getCourseCode().
+                        equals(courseRepository.findByCourseCode(coursecode).get().getCourseCode())
+        ).collect(Collectors.toList());
+
+        for(Result r:results){
+            CourseResultsDAO cr=new CourseResultsDAO();
+            cr.setStudentName(r.getStudent().getRealname());
+            cr.setMatricule(r.getStudent().getMatricule());
+            cr.setStudent_marks(r.getStudent_marks());
+            cr.setGrade(r.getGrade());
+            courseResultsDAOS.add(cr);
+        }
+           return ResponseEntity.ok(courseResultsDAOS);
+    }
 
 
 
