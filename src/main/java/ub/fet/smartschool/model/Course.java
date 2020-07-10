@@ -43,6 +43,10 @@ public class Course {
     @OneToMany(mappedBy = "course")
     Set<RegStudentCourse> registrations;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "course")
+    Set<AssignTeacherCourse> assignTeacherCourses;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "course")

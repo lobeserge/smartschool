@@ -76,12 +76,12 @@ public class Student {
     private Faculty faculty;
 
 
-    @ManyToMany
+    /*@ManyToMany
     @JoinTable(
             name = "student_courses",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id"))
-    Set<Course> registeredCourse;
+    Set<Course> registeredCourse;*/
 
 
     @JsonIgnore
@@ -91,6 +91,7 @@ public class Student {
     @JsonIgnore
     @OneToOne(mappedBy = "student")
     private Fee fee;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "student")

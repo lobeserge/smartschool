@@ -1,5 +1,6 @@
 package ub.fet.smartschool.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -60,5 +61,8 @@ public class Staff {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "staff")
+    Set<AssignTeacherCourse> assignTeacherCourses;
 
 }

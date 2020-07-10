@@ -10,7 +10,11 @@ import java.util.Optional;
 public interface StaffRepository extends JpaRepository<Staff, Long> {
     Optional<Staff> findByUsername(String username);
 
+    Optional<Staff> findByRealnames(String username);
+
     boolean existsByUsername(String username);
+
+    boolean existsByRealnames(String username);
 
     boolean existsByEmail(String email);
 }
