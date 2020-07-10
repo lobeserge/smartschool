@@ -8,7 +8,7 @@ import ub.fet.smartschool.model.Faculty;
 import java.util.Optional;
 
 @Repository
-public interface DepartmentRepository extends JpaRepository<Department,Long> {
+public interface DepartmentRepository extends JpaRepository<Department,Integer> {
     Optional<Department> findByDepartmentCode(String deptCode);
     Optional<Department> findByDepartmentName(String deptName);
     boolean existsByDepartmentName(String deptNmae);
