@@ -11,6 +11,8 @@ import ub.fet.smartschool.repository.DepartmentRepository;
 import ub.fet.smartschool.service.DepartmentService;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -33,6 +35,22 @@ public class DepartmentController {
 	public ResponseEntity<?> getDepartments(){
 		return ResponseEntity.ok(departmentRepository.findAll());
 	}
+
+	@GetMapping("/code/{deptid}")
+	public ResponseEntity<?> getParticularDepartmentByCode(@PathVariable("deptid") String deptid){
+		Department dept=departmentRepository.findByDepartmentCode(deptid).get();
+		return ResponseEntity.ok(dept);
+	}
+
+	@GetMapping("/name/{deptname}")
+	public ResponseEntity<?> getParticularDepartmentByName(@PathVariable("deptname") String deptname){
+		List<Department> departmentList=departmentRepository.findAll().stream().filter(
+				e->e.getDepartmentName().toLowerCase().contains(deptname.toLowerCase())
+		).collect(Collectors.toList());
+		return ResponseEntity.ok(departmentList);
+	}
+
+
 
 	@DeleteMapping("/delete/{departid}")
 	ResponseEntity<?> deleteDepartment(@PathVariable("departid") String  departid) {
