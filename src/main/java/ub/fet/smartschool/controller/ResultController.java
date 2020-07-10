@@ -6,13 +6,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ub.fet.smartschool.dao.FacultyDAO;
 import ub.fet.smartschool.dao.ResultDAO;
+import ub.fet.smartschool.dao.StudentResultDAO;
 import ub.fet.smartschool.model.Result;
+import ub.fet.smartschool.model.Student;
 import ub.fet.smartschool.repository.CourseRepository;
 import ub.fet.smartschool.repository.ResultRepository;
 import ub.fet.smartschool.repository.StudentRepository;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -76,6 +81,27 @@ public class ResultController {
         resultRepository.save(result);
         return ResponseEntity.ok(result);
     }
+
+
+    @GetMapping("/student/{matricule}")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
+    public ResponseEntity<?> getStudentProfile(@PathVariable("matricule") String mat){
+
+        List<Result> results=resultRepository.findAll().stream()
+                .filter(e->e.getStudent().getMatricule().equals(mat)).collect(Collectors.toList());
+        List<StudentResultDAO> studentResultDAOS=new ArrayList<>();
+        for(Result result:results){
+            StudentResultDAO studentResultDAO=new StudentResultDAO();
+            studentResultDAO.setCourseCode(result.getCourse().getCourseCode());
+            studentResultDAO.setCourseName(result.getCourse().getCourseName());
+            studentResultDAO.setGrade(result.getGrade());
+            studentResultDAO.setStudent_marks(result.getStudent_marks());
+            studentResultDAOS.add(studentResultDAO);
+        }
+
+        return ResponseEntity.ok(studentResultDAOS);
+    }
+
 
 
 }
