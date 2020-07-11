@@ -4,12 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ub.fet.smartschool.dao.CourseResultsDAO;
-import ub.fet.smartschool.dao.FacultyDAO;
-import ub.fet.smartschool.dao.ResultDAO;
-import ub.fet.smartschool.dao.StudentResultDAO;
+import ub.fet.smartschool.dao.*;
 import ub.fet.smartschool.model.Result;
-import ub.fet.smartschool.model.Student;
 import ub.fet.smartschool.repository.CourseRepository;
 import ub.fet.smartschool.repository.ResultRepository;
 import ub.fet.smartschool.repository.StudentRepository;
@@ -19,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -86,7 +83,7 @@ public class ResultController {
 
     @GetMapping("/student/{matricule}")
     @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
-    public ResponseEntity<?> getStudentProfile(@PathVariable("matricule") String mat){
+    public ResponseEntity<?> getStudentResults(@PathVariable("matricule") String mat){
 
         List<Result> results=resultRepository.findAll().stream()
                 .filter(e->e.getStudent().getMatricule().equals(mat)).collect(Collectors.toList());
@@ -122,6 +119,70 @@ public class ResultController {
             courseResultsDAOS.add(cr);
         }
            return ResponseEntity.ok(courseResultsDAOS);
+    }
+
+    @DeleteMapping("/delete/student/{studentid}/course/{courseid}")
+    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+    ResponseEntity<?> deleteStudentMarks(@PathVariable("studentid") String  studentid,
+                                         @PathVariable("courseid") String  courseid) {
+
+        List<Result> result=resultRepository.findAll().stream().
+                filter(e->e.getStudent().getMatricule().equals(studentid) &&
+                        e.getCourse().getCourseCode().equals(courseid)).collect(Collectors.toList());
+        for(Result rs:result){
+            resultRepository.deleteById(rs.getId());
+        }
+        return ResponseEntity.ok("results deleted");
+    }
+
+
+    @PutMapping("/update/student/{matricule}/course/{coursecode}")
+    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+    Stream<Result> updateStudentMarks(@RequestBody ResultUpdateDAO resultDAO, @PathVariable("matricule") String matricule,
+                               @PathVariable("coursecode") String coursecode) {
+        return resultRepository.findAll().stream().filter(
+                e->e.getStudent().getMatricule().equals(matricule) &&
+                        e.getCourse().getCourseCode().equals(coursecode)).map(
+                result->{
+                    result.setLocalDateTime(LocalDateTime.now());
+                    result.setStudent_marks(resultDAO.getStudent_marks());
+                                    if(resultDAO.getStudent_marks()>=80){
+                                        result.setStatus("pass");
+                                        result.setGrade("A");
+                                    }
+                                    else if(resultDAO.getStudent_marks()>=70 && resultDAO.getStudent_marks()<=79){
+                                        result.setStatus("pass");
+                                        result.setGrade("B+");
+                                    }
+                                    else if(resultDAO.getStudent_marks()>=60 && result.getStudent_marks()<=69){
+                                        result.setStatus("pass");
+                                        result.setGrade("B");
+                                    }
+                                    else if(resultDAO.getStudent_marks()>=55 && result.getStudent_marks()<=59){
+                                        result.setStatus("pass");
+                                        result.setGrade("C+");
+                                    }
+                                    else if(resultDAO.getStudent_marks()>=50 && result.getStudent_marks()<=54){
+                                        result.setStatus("pass");
+                                        result.setGrade("C");
+                                    }
+                                    else if(resultDAO.getStudent_marks()>=45 && result.getStudent_marks()<=49){
+                                        result.setStatus("fail");
+                                        result.setGrade("D+");
+                                    }
+                                    else if(resultDAO.getStudent_marks()>=40 && result.getStudent_marks()<=44){
+                                        result.setStatus("fail");
+                                        result.setGrade("D");
+                                    }
+                                    else{
+                                        result.setStatus("fail");
+                                        result.setGrade("F");
+                                    }
+                                         return resultRepository.save(result);
+                                }
+
+        );
+
     }
 
 
