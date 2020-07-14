@@ -86,7 +86,7 @@ public class TeacherController {
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     Staff updateStaff(@RequestBody UpdateStaffDAO updateStaffDAO, @PathVariable("id") long id) {
 
         return staffRepository.findById(id)
