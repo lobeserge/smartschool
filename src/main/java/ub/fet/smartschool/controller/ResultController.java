@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*" , maxAge = 3600)
+//@CrossOrigin(origins = "*", allowedHeaders = "*" , maxAge = 3600)
+@CrossOrigin
 @RestController
 @RequestMapping("/api/result")
 public class ResultController {
