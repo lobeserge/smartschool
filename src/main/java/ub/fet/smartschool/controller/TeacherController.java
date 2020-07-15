@@ -48,7 +48,7 @@ public class TeacherController {
     }
 
     @GetMapping("/courses/{teacherid}")
-   // @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     public ResponseEntity<?> getTecahersCourse(@PathVariable("teacherid") String teacherid){
 
         List<AssignTeacherCourse> assignTeacherCourseList=assignTeacherCourseRepository.findAll().
