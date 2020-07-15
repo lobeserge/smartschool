@@ -34,7 +34,7 @@ public class TeacherController {
     StaffRepository staffRepository;
 
     @PostMapping("/add/course")
-    @PreAuthorize("hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addTeacherCourse(@Valid @RequestBody AssignTeacherCourseDAO assignTeacherCourseDAO) {
         AssignTeacherCourse assignTeacherCourse  = new AssignTeacherCourse();
         if (staffRepository.existsByRealnames(assignTeacherCourseDAO.getRealnames()) && courseRepository
@@ -48,7 +48,7 @@ public class TeacherController {
     }
 
     @GetMapping("/courses/{teacherid}")
-    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     public ResponseEntity<?> getTecahersCourse(@PathVariable("teacherid") String teacherid){
 
         List<AssignTeacherCourse> assignTeacherCourseList=assignTeacherCourseRepository.findAll().
@@ -78,7 +78,7 @@ public class TeacherController {
 
 
     @DeleteMapping("/delete/{name}")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<?> deleteTeacher(@PathVariable("name") String  name) {
         long stdmatr=staffRepository.findByRealnames(name).get().getId();
         staffRepository.deleteById(stdmatr);
@@ -86,7 +86,7 @@ public class TeacherController {
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     Staff updateStaff(@RequestBody UpdateStaffDAO updateStaffDAO, @PathVariable("id") long id) {
 
         return staffRepository.findById(id)
