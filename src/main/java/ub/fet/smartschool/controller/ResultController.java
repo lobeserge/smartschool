@@ -82,7 +82,7 @@ public class ResultController {
 
 
     @GetMapping("/student/{matricule}")
-    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
     public ResponseEntity<?> getStudentResults(@PathVariable("matricule") String mat){
 
         List<Result> results=resultRepository.findAll().stream()
@@ -122,7 +122,7 @@ public class ResultController {
     }
 
     @DeleteMapping("/delete/student/{studentid}/course/{courseid}")
-    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     ResponseEntity<?> deleteStudentMarks(@PathVariable("studentid") String  studentid,
                                          @PathVariable("courseid") String  courseid) {
 
