@@ -60,8 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 		authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-		authenticationManagerBuilder.staffDetailsService(staffDetailsService).passwordEncoder(passwordEncoder());
-		authenticationManagerBuilder.adminDetailsService(adminDetailsService).passwordEncoder(passwordEncoder());
+		authenticationManagerBuilder.userDetailsService(staffDetailsService).passwordEncoder(passwordEncoder());
+		authenticationManagerBuilder.userDetailsService(adminDetailsService).passwordEncoder(passwordEncoder());
 	}
 
 	@Bean
@@ -73,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) {
 		web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/**",
-				"/swagger-ui.html", "/webjars/**");
+				"/swagger-ui.html", "/webjars/**","/api/**");
 	}
 
 	@Override
