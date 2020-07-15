@@ -32,7 +32,7 @@ public class ResultController {
     CourseRepository courseRepository;
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     public ResponseEntity<?> addResult(@Valid @RequestBody ResultDAO resultDAO) {
         Result result = new Result();
         if(studentRepository.existsByMatricule(resultDAO.getMatricule()) &&
@@ -137,7 +137,7 @@ public class ResultController {
 
 
     @PutMapping("/update/student/{matricule}/course/{coursecode}")
-    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     Stream<Result> updateStudentMarks(@RequestBody ResultUpdateDAO resultDAO, @PathVariable("matricule") String matricule,
                                @PathVariable("coursecode") String coursecode) {
         return resultRepository.findAll().stream().filter(
