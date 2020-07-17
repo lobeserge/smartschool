@@ -5,11 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ub.fet.smartschool.dao.*;
-import ub.fet.smartschool.model.Course;
-import ub.fet.smartschool.model.Faculty;
-import ub.fet.smartschool.model.RegStudentCourse;
-import ub.fet.smartschool.repository.CourseRepository;
-import ub.fet.smartschool.repository.RegStudentCourseRepository;
+import ub.fet.smartschool.model.*;
+import ub.fet.smartschool.repository.*;
 import ub.fet.smartschool.service.CourseService;
 
 import javax.validation.Valid;
@@ -29,6 +26,15 @@ public class CourseController {
 
     @Autowired
     RegStudentCourseRepository reg;
+
+    @Autowired
+    AssignTeacherCourseRepository assignTeacherCourseRepository;
+
+    @Autowired
+    ResultRepository resultRepository;
+
+    @Autowired
+    StaffRepository staffRepository;
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
@@ -98,6 +104,31 @@ public class CourseController {
                 });
     }
 
+    @GetMapping("/teacher/{teacherid}/students")
+    public ResponseEntity<?> getNoStudentsForCourse(@PathVariable("teacherid") long teacherid){
+        List<AssignTeacherCourse> assignTeacherCourses=assignTeacherCourseRepository.findAll().stream()
+                .filter(e->e.getStaff().getId().equals(teacherid)).collect(Collectors.toList());
+       long regStudentCourses=reg.findAll().stream().
+               filter(d->assignTeacherCourses.stream().map(assignTeacherCourse -> assignTeacherCourse.getCourse()).anyMatch(
+                       f->f.equals(d.getCourse())
+               )).count();
+
+
+        return ResponseEntity.ok(regStudentCourses);
+    }
+
+    @GetMapping("/teacher/{teacherid}/marks")
+    public ResponseEntity<?> getNoRecordedResultByTeacher(@PathVariable("teacherid") long teacherid){
+        List<AssignTeacherCourse> assignTeacherCourses=assignTeacherCourseRepository.findAll().stream()
+                .filter(e->e.getStaff().getId().equals(teacherid)).collect(Collectors.toList());
+        long regStudentCourses=resultRepository.findAll().stream().
+                filter(d->assignTeacherCourses.stream().map(assignTeacherCourse -> assignTeacherCourse.getCourse()).anyMatch(
+                        f->f.equals(d.getCourse())
+                )).count();
+
+
+        return ResponseEntity.ok(regStudentCourses);
+    }
 
 
 
