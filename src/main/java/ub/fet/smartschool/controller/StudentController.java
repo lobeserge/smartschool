@@ -34,7 +34,7 @@ public class StudentController {
     FeeRepository feeRepository;
 
     @PostMapping("/add/course")
-    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
     public ResponseEntity<?> regCourse(@Valid @RequestBody RegStudentCourseDAO regStudentCourseDAO) {
         RegStudentCourse regStudentCourse = new RegStudentCourse();
         if (studentRepository.existsByMatricule(regStudentCourseDAO.getMatricule()) && courseRepository
@@ -49,24 +49,59 @@ public class StudentController {
     }
 
     @GetMapping("/profile/{matricule}")
-    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
     public ResponseEntity<?> getStudentProfile(@PathVariable("matricule") String mat) {
 
         Student student = studentRepository.findByMatricule(mat).get();
-        StudentProfile studentProfile = new StudentProfile();
+        Profile studentProfile = new Profile();
         studentProfile.setStudent_dept(student.getDepartment().getDepartmentName());
         studentProfile.setStudent_email(student.getEmail());
         studentProfile.setStudent_name(student.getRealname());
         studentProfile.setStudent_faculty(student.getFaculty().getFacultyName());
         studentProfile.setStudent_level(String.valueOf(student.getLevel()));
         studentProfile.setStudent_matricule(student.getMatricule());
+        studentProfile.setDob(student.getDob());
+        studentProfile.setAddress(student.getAddress());
+        return ResponseEntity.ok(studentProfile);
 
+    }
+    @GetMapping("/profile/username/{username}")
+    public ResponseEntity<?> getStudentProfileByName(@PathVariable("username") String username) {
+
+        Student student = studentRepository.findByUsername(username).get();
+        Profile studentProfile = new Profile();
+        studentProfile.setStudent_dept(student.getDepartment().getDepartmentName());
+        studentProfile.setStudent_email(student.getEmail());
+        studentProfile.setStudent_name(student.getRealname());
+        studentProfile.setStudent_faculty(student.getFaculty().getFacultyName());
+        studentProfile.setStudent_level(String.valueOf(student.getLevel()));
+        studentProfile.setStudent_matricule(student.getMatricule());
+        studentProfile.setDob(student.getDob());
+        studentProfile.setAddress(student.getAddress());
         return ResponseEntity.ok(studentProfile);
 
     }
 
+    @GetMapping("/profile/id/{id}")
+    public ResponseEntity<?> getStudentProfileById(@PathVariable("id") long id) {
+
+        Student student = studentRepository.findById(id).get();
+        Profile studentProfile = new Profile();
+        studentProfile.setStudent_dept(student.getDepartment().getDepartmentName());
+        studentProfile.setStudent_email(student.getEmail());
+        studentProfile.setStudent_name(student.getRealname());
+        studentProfile.setStudent_faculty(student.getFaculty().getFacultyName());
+        studentProfile.setStudent_level(String.valueOf(student.getLevel()));
+        studentProfile.setStudent_matricule(student.getMatricule());
+        studentProfile.setDob(student.getDob());
+        studentProfile.setAddress(student.getAddress());
+        return ResponseEntity.ok(studentProfile);
+
+    }
+
+
+
     @PostMapping("/pay/fee")
-    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
     public ResponseEntity<?> payFee(@Valid @RequestBody FeeDAO feeDAO){
 
             Fee fee=new Fee();
@@ -125,6 +160,8 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
+
+
     @GetMapping("/student-name/{name}")
     public ResponseEntity<?> getParticularStudentByName(@PathVariable("name") String name){
         List<Student> student=studentRepository.findAll().stream().filter(
@@ -135,7 +172,7 @@ public class StudentController {
 
 
     @DeleteMapping("/delete/{matricule}")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<?> deleteStudent(@PathVariable("matricule") String  matricule) {
         long stdmatr=studentRepository.findByMatricule(matricule).get().getId();
         studentRepository.deleteById(stdmatr);
@@ -143,7 +180,7 @@ public class StudentController {
     }
 
     @PutMapping("/update/{matricule}")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     Student updateStudent(@RequestBody UpdateStudentDAO updateStudentDAO, @PathVariable("matricule") String matricule) {
 
         return studentRepository.findByMatricule(matricule)
@@ -162,7 +199,7 @@ public class StudentController {
     }
 
     @PutMapping("/level/{matricule}")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     Student updateStudentLevel(@RequestBody UpdateStudentLevel updateStudentLevel, @PathVariable("matricule") String matricule) {
 
         return studentRepository.findByMatricule(matricule)
