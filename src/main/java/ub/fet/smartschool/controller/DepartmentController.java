@@ -25,7 +25,7 @@ public class DepartmentController {
 	DepartmentRepository departmentRepository;
 
 	@PostMapping("/add")
-	@PreAuthorize("hasRole('ADMIN')")
+//	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> addDept(@Valid @RequestBody DepartmentDAO departmentDAO) {
 		return ResponseEntity.ok(departmentService.addDepartment(departmentDAO));
 	}
@@ -51,7 +51,7 @@ public class DepartmentController {
 	}
 
 	@DeleteMapping("/delete/{departid}")
-	@PreAuthorize("hasRole('ADMIN')")
+//	@PreAuthorize("hasRole('ADMIN')")
 	ResponseEntity<?> deleteDepartment(@PathVariable("departid") String  departid) {
 		int deptid=departmentRepository.findByDepartmentCode(departid).get().getId();
 		departmentRepository.deleteById(deptid);
@@ -59,7 +59,7 @@ public class DepartmentController {
 	}
 
 	@PutMapping("/update/{departid}")
-	@PreAuthorize("hasRole('ADMIN')")
+//	@PreAuthorize("hasRole('ADMIN')")
 	Department updateDepartment(@RequestBody UpdateDepartmentDAO departmentName, @PathVariable("departid") String departid) {
 
 		return departmentRepository.findByDepartmentCode(departid)

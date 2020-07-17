@@ -37,14 +37,14 @@ public class CourseController {
     StaffRepository staffRepository;
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addCourset(@Valid @RequestBody CourseDAO courseDAO) {
         return ResponseEntity.ok(courseService.addCourse(courseDAO));
     }
 
 
     @GetMapping("/student/{coursecode}")
-    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     public ResponseEntity<?> getStudentsForACourse(@PathVariable("coursecode") String coursecode){
         List<RegStudentCourse> regcourse=reg.findAll().stream().filter(
                 e->e.getCourse().getCourseCode().equals(coursecode)
@@ -83,7 +83,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/delete/{coursecode}")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<?> deleteCourse(@PathVariable("coursecode") String  coursecode) {
         long courseid=courseRepository.findByCourseCode(coursecode).get().getId();
         courseRepository.deleteById(courseid);
@@ -91,7 +91,7 @@ public class CourseController {
     }
 
     @PutMapping("/update/{courseid}")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     Course updateCourse(@RequestBody UpdateCourseDAO updateCourseDAO, @PathVariable("courseid") String courseid) {
 
         return courseRepository.findByCourseCode(courseid)

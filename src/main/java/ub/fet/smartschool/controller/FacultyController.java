@@ -54,7 +54,7 @@ public class FacultyController {
 	}
 
 	@DeleteMapping("/delete/{facultyid}")
-	@PreAuthorize("hasRole('ADMIN')")
+//	@PreAuthorize("hasRole('ADMIN')")
 	ResponseEntity<?> deleteFaculty(@PathVariable("facultyid") String  facultyid) {
 		int factid=facultyRepository.findByFacultyCode(facultyid).get().getId();
 		facultyRepository.deleteById(factid);
@@ -62,7 +62,7 @@ public class FacultyController {
 	}
 
 	@PutMapping("/update/{facultyid}")
-	@PreAuthorize("hasRole('ADMIN')")
+//	@PreAuthorize("hasRole('ADMIN')")
 	Faculty updateFaculty(@RequestBody UpdateFacultyDAO updateFacultyDAO, @PathVariable("facultyid") String facultyid) {
 
 		return facultyRepository.findByFacultyCode(facultyid)
