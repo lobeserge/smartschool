@@ -82,10 +82,10 @@ public class CourseController {
         return ResponseEntity.ok(course);
     }
 
-    @DeleteMapping("/delete/{coursecode}")
+    @DeleteMapping("/delete/{courseid}")
 //    @PreAuthorize("hasRole('ADMIN')")
-    ResponseEntity<?> deleteCourse(@PathVariable("coursecode") String  coursecode) {
-        long courseid=courseRepository.findByCourseCode(coursecode).get().getId();
+    ResponseEntity<?> deleteCourse(@PathVariable("coursecode") long  courseid) {
+        //long courseid=courseRepository.findByCourseCode(coursecode).get().getId();
         courseRepository.deleteById(courseid);
         return ResponseEntity.ok("course deleted");
     }
