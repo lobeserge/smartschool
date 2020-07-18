@@ -28,7 +28,6 @@ public class FacultyController {
 	private FacultyRepository facultyRepository;
 
 	@PostMapping("/add")
-	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> addFaculty(@Valid @RequestBody FacultyDAO facultyDAO) {
 		return ResponseEntity.ok(facultyService.addFaculty(facultyDAO));
 	}
