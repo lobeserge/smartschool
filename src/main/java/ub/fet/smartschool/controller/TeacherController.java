@@ -67,7 +67,8 @@ public class TeacherController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getTeachers(){
-        return ResponseEntity.ok(staffRepository.findAll());
+         List<Staff> teacher=staffRepository.findAll();
+        return ResponseEntity.ok(teacher);
     }
 
     @GetMapping("/teacher-name/{name}")
