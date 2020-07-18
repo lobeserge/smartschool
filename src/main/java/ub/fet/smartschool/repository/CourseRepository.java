@@ -8,7 +8,7 @@ import ub.fet.smartschool.model.Student;
 import java.util.Optional;
 
 @Repository
-public interface CourseRepository  extends JpaRepository<Course,Integer> {
+public interface CourseRepository  extends JpaRepository<Course,Long> {
 
     boolean existsByCourseCode(String coursecode);
     Optional<Course> findByCourseCode(String coursecode);
