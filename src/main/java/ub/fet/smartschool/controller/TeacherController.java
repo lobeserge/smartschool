@@ -65,6 +65,10 @@ public class TeacherController {
         return ResponseEntity.ok(tf);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getTeachers(){
+        return ResponseEntity.ok(staffRepository.findAll());
+    }
 
     @GetMapping("/teacher-name/{name}")
     public ResponseEntity<?> getParticularTeacherByName(@PathVariable("name") String name){
